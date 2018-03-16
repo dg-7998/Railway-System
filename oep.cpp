@@ -4,6 +4,7 @@
 #include<string.h>
 #include<cmath>
 #include<fstream>
+#include<vector>
 using namespace std;
 #define for(i,a,b) for(int i=a;i<b;i++)
 char filename[]="/home/nikmul19/Desktop/extra.txt";
@@ -28,8 +29,8 @@ class User
 class Train
 {
     
-    char train_name[20],arr_t[10],source[20],dest[20],dep_t[10],c_cat[30];
-    int train_no,fare[6];
+    char train_name[20],arr_t[10],source[20],dest[20],dep_t[10];
+    int train_no,fare[6],availability[6],c_cat[6];
     public:
     void getdata()
     {
@@ -39,7 +40,7 @@ class Train
         cin.ignore(1);                   //ignores the newline character stored in the stream
         cout<<"enter train_name:";  
         cin.getline(train_name,20);
-        
+
         cout<<"enter arrival time:";
         cin.getline(arr_t,10);
         cout<<"enter departure time:";
@@ -50,9 +51,15 @@ class Train
         cout<<"enter dest:";
         cin.getline(dest,20);
         cout<<"enter categories:";
-        cin.getline(c_cat,30);
+        //-----------------------------enter categories as 0 for NOT THERE and 1 for THERE---------------------------
+        for(i,0,6)cin>>c_cat[i];
         cout<<"enter train no:"; cin>>train_no;
         //cin.ignore(1);
+        cout<<"enter availability:";
+        //-----------------------------Set availability to -999 if no such category----------------------------------
+        for(i,0,6)if(c_cat[i]==0)availability[i]=-999;
+        //-----------------------------Check again and if class is there take input from admin------------------------    
+        for(i,0,6)if(availability[i]!=-999)cin>>availability[i];
         cout<<"enter fares:"; 
         for(i,0,6)cin>>fare[i];
     }
@@ -88,18 +95,28 @@ class Train
 };
 void matchTrains(User query)
     {
+        int count=0;
         fstream f1;
         f1.open(filename,ios::in|ios::binary);
-        Train t;
+        Train tr;
+        vector<Train> t;
         char ch;
-        while(f1.read((char *)&t,sizeof(t)))
+        while(f1.read((char *)&tr,sizeof(tr)))
             {
-                if(strcmp(t.source,query.source)==0 && strcmp(t.destination,query.destination)==0 )
+                if(strcmp(tr.source,query.source)==0 && strcmp(tr.destination,query.destination)==0 )
                 {
+                    count++;
                     //--------------------displays only those trains with matching source and destination-----------------------
-                    t.putdata();
+                    t.push_back(tr);
                 }
             }
+        if(count>0)
+        {
+            cout<<"Enter number of passengers";
+            cin>>passengers;
+            cout<<"Select the index of train (Ex:1,2,3):"
+            cin>>index;
+        }
         f1.close();
         
     }
@@ -111,4 +128,3 @@ int main()
     t.insert();
 	return 0;
 }
-
