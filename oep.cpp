@@ -11,8 +11,9 @@ char filename[]="/home/nikmul19/Desktop/extra.txt";
 class Train;
 class User
 {
-	char source[20],destination[20],date[20];
+	
 	public:
+        char source[20],destination[20],date[20];
 		void getdata()
 		{
             //--------------------take the user input query--------------------------
@@ -29,9 +30,10 @@ class User
 class Train
 {
     
-    char train_name[20],arr_t[10],source[20],dest[20],dep_t[10];
-    int train_no,fare[6],availability[6],c_cat[6];
     public:
+        char train_name[20],arr_t[10],source[20],dest[20],dep_t[10];
+        int train_no,fare[6],availability[6],c_cat[6];
+    
     void getdata()
     {
         int i;
@@ -95,27 +97,53 @@ class Train
 };
 void matchTrains(User query)
     {
-        int count=0;
+        int count=0,waiting=0,index,category,passengers,choice;
         fstream f1;
         f1.open(filename,ios::in|ios::binary);
         Train tr;
-        vector<Train> t;
+        vector<Train> t;   //-----------------vector of trains matching user choice--------------------------
         char ch;
         while(f1.read((char *)&tr,sizeof(tr)))
             {
-                if(strcmp(tr.source,query.source)==0 && strcmp(tr.destination,query.destination)==0 )
+                if(strcmp(tr.source,query.source)==0 && strcmp(tr.dest,query.destination)==0 )
                 {
                     count++;
                     //--------------------displays only those trains with matching source and destination-----------------------
                     t.push_back(tr);
+                    cout<<count<<". ";
+                    tr.putdata();
+                    cout<<endl;
                 }
             }
+
         if(count>0)
         {
             cout<<"Enter number of passengers";
             cin>>passengers;
-            cout<<"Select the index of train (Ex:1,2,3):"
-            cin>>index;
+            while(1)
+            {
+                cout<<"Select the index of train (Ex:1,2,3):";
+                cin>>index;
+                
+                for(i,0,6)cout<<t[index-1].availability[i]<<" ";
+
+                cout<<"\n Enter category 1)SL 2)CC 3)1A 4)2A 5)3A 6)2S";
+                cin>>category;
+                cout<<"Do you want to book in this train? (1.YES 2.NO) :";
+                cin>>choice;
+                if(choice==0)continue;
+                //----------------------------book the tickets and display the status (WL OR CNF)-------------------------------------
+                if(passengers>t[index-1].availability[category-1])
+                    {
+                        waiting=passengers-t[index-1].availability[category-1];
+                    }   
+                t[index-1].availability[category-1]-=passengers;
+                cout<<"waiting: "<<waiting<<" Confirmed:"<<t[index-1].availability[category-1];
+            }
+        }
+        else
+        {
+            cout<<"\nSorry no trains matching your query"<<endl;
         }
         f1.close();
         
