@@ -7,23 +7,23 @@
 #include<vector>
 #include<iomanip>
 using namespace std;
-#define for(i,a,b) for(int i=a;i<b;i++)
-char filename[]="/home/pc001/Desktop/extra.txt";
+#define for(i,a,b) for(i=a;i<b;i++)
+char filename[]="/home/nikmul19/Desktop/extra.txt";
 class Train;
 class User
 {
-	public:
+    public:
         char source[20],destination[20],date[20];
-		void getdata()
-		{
+        void getdata()
+        {
             //--------------------take the user input query--------------------------
-			cout<<"Enter Source Station: ";
-			cin>>source;
-			cout<<"Enter Destination Station: ";
-			cin>>destination;
-			cout<<"Enter Date: ";
-			cin>>date;
-		}
+            cout<<"Enter Source Station: ";
+            cin>>source;
+            cout<<"Enter Destination Station: ";
+            cin>>destination;
+            cout<<"Enter Date: ";
+            cin>>date;
+        }
         friend void matchTrains(User);
 };
 
@@ -84,6 +84,7 @@ class Train
         f1.close();
        // printFile();
     }
+
     void printFile()
     {
         Train t;
@@ -117,29 +118,54 @@ class Train
         cout<<endl;
         cout<<"--------------------------------------------------\n";
     }
+
+    void update(Train match)
+    {
+        int n,i;
+        fstream f1;
+        Train obj; 
+        f1.open(filename,ios::out|ios::binary);
+        while(f1.read((char *)&obj,sizeof(obj)))
+        {
+            if(obj.train_no==match.train_no)
+                {
+                    f1.write((char*)&(match),sizeof(obj));
+                }
+
+        }
+        
+        f1.close();
+    }
+    
     friend void matchTrains(User);
 };
 
 void matchTrains(User query)
     {
-        int count=0,waiting=0,index,category,passengers,choice;
+        int count=0,waiting=0,position,index,category,passengers,choice,i;
+        vector <int> Indexes;
         fstream f1;
-        f1.open(filename,ios::in|ios::binary);
+        f1.open(filename,ios::in|ios::binary|ios::out);
         Train tr;
-        vector<Train> t;   //-----------------vector of trains matching user choice--------------------------
+        vector<Train> matching;   //-----------------vector of trains matching user choice--------------------------
+        vector<Train> allTrains;
         char ch;
         while(f1.read((char *)&tr,sizeof(tr)))
             {
+                allTrains.push_back(tr);//-----------------data of all 
+                i++;
                 if(strcmp(tr.source,query.source)==0 && strcmp(tr.dest,query.destination)==0)
                 {
                     count++;
+                    Indexes.push_back(i);  //-------------indexes of trains matching-------------------------------------------
                     //--------------------displays only those trains with matching source and destination-----------------------
-                    t.push_back(tr);
+                    matching.push_back(tr);
                     cout<<count<<". "<<endl;
                     tr.putdata();
                     cout<<endl;
                 }
             }
+        f1.seekg(0),f1.seekp(0);
 
         if(count>0)
         {
@@ -149,8 +175,7 @@ void matchTrains(User query)
             {
                 cout<<"Select the index of train (Ex:1,2,3): ";
                 cin>>index;
-
-                for(i,0,6)cout<<t[index-1].availability[i]<<" ";
+                for(i,0,6)cout<<matching[index-1].availability[i]<<" ";
 
                 cout<<"\nEnter category 1)SL 2)CC 3)1A 4)2A 5)3A 6)2S: ";
                 cin>>category;
@@ -158,14 +183,17 @@ void matchTrains(User query)
                 cin>>choice;
                 if(choice==0)continue;
                 //----------------------------book the tickets and display the status (WL OR CNF)-------------------------------------
-                if(passengers>t[index-1].availability[category-1])
+                if(passengers>matching[index-1].availability[category-1])
                     {
-                        waiting=passengers-t[index-1].availability[category-1];
+                        waiting=passengers-matching[index-1].availability[category-1];
                     }
-                t[index-1].availability[category-1]-=passengers;
+                matching[index-1].availability[category-1]-=passengers;
                 cout<<"waiting: "<<waiting<<endl<<"Confirmed.Ticket Booked"<<endl;
+                
+                tr.update(matching[index-1]); //-----------updates the file-----------------
                 break;
             }
+
         }
         else
         {
@@ -175,11 +203,11 @@ void matchTrains(User query)
     }
 int main()
 {
-	User U;
+    User U;
     U.getdata();
     Train t;
     //t.insert();
     //t.printFile();
     matchTrains(U);
-	return 0;
+    return 0;
 }
