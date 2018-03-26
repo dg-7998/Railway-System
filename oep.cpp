@@ -124,7 +124,7 @@ class Train
         int n,i;
         fstream f1;
         Train obj; 
-        f1.open(filename,ios::out|ios::binary);
+        f1.open(filename,ios::in|ios::out|ios::binary);
         while(f1.read((char *)&obj,sizeof(obj)))
         {
             if(obj.train_no==match.train_no)
