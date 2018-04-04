@@ -182,8 +182,8 @@ void matchTrains(User query)
                         waiting=passengers-matching[index-1].availability[category-1];
                     }
                 matching[index-1].availability[category-1]-=passengers;
-                cout<<"waiting: "<<waiting<<endl<<"Confirmed.Ticket Booked"<<endl;
-                cout<<"Total cost: "<<passengers*matching[index-1].fare[category-1]<<endl;
+                cout<<"\e[1m"<<"waiting: "<<waiting<<endl<<"Confirmed.Ticket Booked"<<"\e[0m"<<endl;
+                cout<<"\e[1m"<<"Total cost: Rs. "<<passengers*matching[index-1].fare[category-1]<<"\e[0m"<<endl;
                 matching[index-1].putdata();
                 tr.update(matching[index-1]); //-----------updates the file-----------------
                 break;
@@ -191,18 +191,18 @@ void matchTrains(User query)
         }
         else
         {
-            cout<<"\nSorry no trains matching your query"<<endl;
+            cout<<"\e[1m"<<"\nSorry no trains matching your query"<<"\e[0m"<<endl;
         }
         f1.close();
     }
 int main()
 {
-     User U;
-     U.getdata();
-     Train t;
-     //t.insert();
-     // t.printFile();
-     matchTrains(U);
-     //t.printFile();
-     return 0;
+	User U;
+    U.getdata();
+    Train t;
+    //t.insert();
+   // t.printFile();
+    matchTrains(U);
+    //t.printFile();
+	return 0;
 }
