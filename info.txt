@@ -1,7 +1,0 @@
-Train No	Train Name	Departure Time		Arrival Time		Class		Fare
-19508		Arravali	22.30			06.35			SL,CC,2S	200,150,100
-12934		Karnavati	04.55			12.35			1A,2A,3A	800,600,500
-12902		Gujarat Mail	22.00			06.25			2S,SL,3A	100,200,400
-22928		Lokshakti	21.10			05.50			2A,3A,SL	600,400,200
-17203		Bhavnagar	10.00			18.20			2A,3A,CC	700,500,350
-	
