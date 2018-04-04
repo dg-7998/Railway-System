@@ -7,12 +7,12 @@
 #include<iomanip>
 using namespace std;
 #define for(i,a,b) for(int i=a;i<b;i++)
-char filename[]="/root/Desktop/extra1.dat";
+char filename[]="/root/Desktop/railway/Railway-System-master/extra1.dat";
 class Train;
 class User
 {
 	public:
-        char source[20],destination[20],date[20];
+        char source[20],destination[20];
 		void getdata()
 		{
             //--------------------take the user input query--------------------------
@@ -20,8 +20,6 @@ class User
 			cin>>source;
 			cout<<"Enter Destination Station: ";
 			cin>>destination;
-			cout<<"Enter Date: ";
-			cin>>date;
 		}
         friend void matchTrains(User);
 };
@@ -185,12 +183,11 @@ void matchTrains(User query)
                     }
                 matching[index-1].availability[category-1]-=passengers;
                 cout<<"waiting: "<<waiting<<endl<<"Confirmed.Ticket Booked"<<endl;
-                cout<<"match:"<<endl;
+                cout<<"Total cost: "<<passengers*matching[index-1].fare[category-1]<<endl;
                 matching[index-1].putdata();
                 tr.update(matching[index-1]); //-----------updates the file-----------------
                 break;
             }
-
         }
         else
         {
@@ -200,12 +197,12 @@ void matchTrains(User query)
     }
 int main()
 {
-	User U;
-    U.getdata();
-    Train t;
-    //t.insert();
-    t.printFile();
-    matchTrains(U);
-    t.printFile();
-	return 0;
+     User U;
+     U.getdata();
+     Train t;
+     //t.insert();
+     // t.printFile();
+     matchTrains(U);
+     //t.printFile();
+     return 0;
 }
